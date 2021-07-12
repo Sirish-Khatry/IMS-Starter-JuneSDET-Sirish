@@ -11,19 +11,18 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Item;
 import com.qa.ims.utils.DBUtils;
 
-public class ItemDAIO implements Dao<Item> {
+public class ItemDAO implements Dao<Item> {
 
 	public static final Logger LOGGER = LogManager.getLogger();
-	
+
 	@Override
 	public Item modelFromResultSet(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("id");
+		Long id = resultSet.getLong("item_id");
 		String name = resultSet.getString("name");
-		Long value = resultSet.getLong("value");
+		double value = resultSet.getLong("value");
 		return new Item(id, name, value);
 	}
 
@@ -63,7 +62,7 @@ public class ItemDAIO implements Dao<Item> {
 				PreparedStatement statement = connection
 						.prepareStatement("INSERT INTO items(name, value) VALUES (?, ?)");) {
 			statement.setString(1, item.getName());
-			statement.setLong(2, item.getValue());
+			statement.setDouble(2, item.getValue());
 			statement.executeUpdate();
 			return readLatest();
 		} catch (Exception e) {
@@ -72,7 +71,7 @@ public class ItemDAIO implements Dao<Item> {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Item read(Long id) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
@@ -95,7 +94,7 @@ public class ItemDAIO implements Dao<Item> {
 				PreparedStatement statement = connection
 						.prepareStatement("UPDATE items SET name = ?, value = ? WHERE item_id = ?");) {
 			statement.setString(1, item.getName());
-			statement.setLong(2, item.getValue());
+			statement.setDouble(2, item.getValue());
 			statement.setLong(3, item.getId());
 			statement.executeUpdate();
 			return read(item.getId());
@@ -118,8 +117,5 @@ public class ItemDAIO implements Dao<Item> {
 		}
 		return 0;
 	}
-
-
-
 
 }
