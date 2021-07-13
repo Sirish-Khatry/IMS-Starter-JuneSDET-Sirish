@@ -17,6 +17,12 @@ public class Order {
 		this.item_id = item_id;
 	}
 
+//	public Order(Long id, Long customer_id) {
+//		super();
+//		this.id = id;
+//		this.customer_id = customer_id;
+//	}
+	
 	public Order(Long id, Long item_id) {
 		super();
 		this.id = id;
@@ -103,6 +109,12 @@ public class Order {
 		return Objects.equals(customer_id, other.customer_id) && Objects.equals(first_name, other.first_name)
 				&& Objects.equals(id, other.id) && Objects.equals(item_id, other.item_id)
 				&& Objects.equals(item_name, other.item_name) && Objects.equals(lastname, other.lastname);
+	}
+
+	@Override
+	public String toString() {
+		return "Order [id=" + id + ", customer_id=" + customer_id + ", item_id=" + item_id + ", first_name="
+				+ first_name + ", lastname=" + lastname + ", item_name=" + item_name + "]";
 	}
 
 

@@ -11,7 +11,11 @@ public interface CrudController<T> {
 	List<T> readAll();
 
 	T create();
-
+	
+	List<T> readList();
+	
+	T read();
+	
 	T update();
 
 	int delete();

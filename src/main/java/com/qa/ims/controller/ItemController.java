@@ -44,12 +44,18 @@ public class ItemController implements CrudController<Item> {
 	 */
 	@Override
 	public Item create() {
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter a name for the item");
+		LOGGER.info("=".repeat(90));
 		String name = utils.getString();
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter a value of the item in 2 decimal places");
+		LOGGER.info("=".repeat(90));
 		double value = utils.getDouble();
 		Item item = itemDAO.create(new Item(name, value));
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Item created");
+		LOGGER.info("=".repeat(90));
 		return item;
 	}
 
@@ -58,14 +64,22 @@ public class ItemController implements CrudController<Item> {
 	 */
 	@Override
 	public Item update() {
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter the id of the item you would like to update");
+		LOGGER.info("=".repeat(90));
 		Long id = utils.getLong();
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter a name for the item");
+		LOGGER.info("=".repeat(90));
 		String name = utils.getString();
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter a value for the item in 2 decimal places");
+		LOGGER.info("=".repeat(90));
 		double value = utils.getDouble();
 		Item item = itemDAO.update(new Item(id, name, value));
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Customer Updated");
+		LOGGER.info("=".repeat(90));
 		return item;
 	}
 
@@ -76,9 +90,26 @@ public class ItemController implements CrudController<Item> {
 	 */
 	@Override
 	public int delete() {
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter the id of the item you would like to delete");
+		LOGGER.info("=".repeat(90));
 		Long id = utils.getLong();
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Item Deleted");
+		LOGGER.info("=".repeat(90));
 		return itemDAO.delete(id);
+	}
+
+	@Override
+	public Item read() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Item> readList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -38,13 +38,41 @@ public class OrderController implements CrudController<Order> {
 		}
 		return orders;
 	}
+	
+	public List<Order> readAllOrderDetail() {
+		List<Order> orders = orderDAO.readAllOrderDetails();
+		for (Order order : orders) {
+			LOGGER.info(order);
+		}
+		return orders;
+	}
+
+	@Override
+	public List<Order> readList() {
+		readAll();
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Please enter id of the order you would like to read");
+		Long order_id = utils.getLong();
+		LOGGER.info("=".repeat(90));
+		List<Order> orders = null;
+		try {
+			orders = orderDAO.readList(order_id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (Order order : orders) {
+			LOGGER.info(order);
+		}
+		return orders;
+	}
 
 	/**
 	 * Creates a item by taking in user input
 	 */
 	@Override
 	public Order create() {
-		boolean choice = false;
+
 		LOGGER.info("Please enter id of the customer");
 		Long cust_id = utils.getLong();
 		Order order = orderDAO.create(new Order(cust_id));
@@ -52,34 +80,24 @@ public class OrderController implements CrudController<Order> {
 		return order;
 	}
 
-	public Order createAgain(ResultSet order_id) throws SQLException {
-		Order order;
-		boolean choice = true;
-		Long orderID;
-		orderID = order_id.getLong(1);
-		while (choice) {
-
-			ItemChoice pick = null;
-			LOGGER.info("Add item to the order?");
-			ItemChoice.printChoices();
-			pick = ItemChoice.getChoice(utils);
-
-			switch (pick) {
-			case YES:
-				LOGGER.info("Please enter id of the item you would like to add to the order");
-				Long item_id2 = utils.getLong();
-				if (order_id.next()) {
-					order = orderDAO.createOrderItem(new Order(orderID, item_id2));
-				} else {
-					LOGGER.info("Order it not found");
-					order = null;
-				}
-			case NO:
-				choice = false;
-			}
-
-		}
-		return null;
+	public Order createOrderItem() throws SQLException {
+		LOGGER.info("=".repeat(90));
+		readAllOrderDetail();
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Please enter id of the order you would like to add item to");
+		LOGGER.info("=".repeat(90));
+		Long order_id = utils.getLong();
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Please enter id of the item to add to this order");
+		LOGGER.info("=".repeat(90));
+		Long item_id = utils.getLong();
+		Order order = orderDAO.createOrderItem(new Order(order_id, item_id));
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Item added");
+		readAllOrderDetail();
+		LOGGER.info("=".repeat(90));
+		return order;
 
 	}
 
@@ -107,6 +125,12 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Please enter the id of the order you would like to delete");
 		Long id = utils.getLong();
 		return orderDAO.delete(id);
+	}
+
+	@Override
+	public Order read() {
+		readList();
+		return null;
 	}
 
 }

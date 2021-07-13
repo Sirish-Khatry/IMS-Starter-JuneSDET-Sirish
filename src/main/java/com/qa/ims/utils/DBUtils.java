@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.Properties;
 import java.util.stream.Stream;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,6 +71,7 @@ public class DBUtils {
 	}
 
 	public Connection getConnection() throws SQLException {
+		
 		return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 	}
 
