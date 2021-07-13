@@ -7,8 +7,10 @@ import com.qa.ims.controller.Action;
 import com.qa.ims.controller.CrudController;
 import com.qa.ims.controller.CustomerController;
 import com.qa.ims.controller.ItemController;
+import com.qa.ims.controller.OrderController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.ItemDAO;
+import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.DBUtils;
 import com.qa.ims.utils.Utils;
@@ -19,6 +21,7 @@ public class IMS {
 
 	private final CustomerController customers;
 	private final ItemController items;
+	private final OrderController orders;
 	private final Utils utils;
 
 	public IMS() {
@@ -27,6 +30,9 @@ public class IMS {
 		this.customers = new CustomerController(custDAO, utils);
 		final ItemDAO itemDAO = new ItemDAO();
 		this.items = new ItemController(itemDAO, utils);
+//		final OrderDAO orderDAO = new OrderDAO();
+		//this.orders = new OrderController(new OrderDAO(itemDAO, custDAO), utils);
+		this.orders = null;
 	}
 
 	public void imsSystem() {
@@ -58,6 +64,7 @@ public class IMS {
 				active = this.items;
 				break;
 			case ORDER:
+				active = this.orders;
 				break;
 			case STOP:
 				return;
@@ -69,7 +76,6 @@ public class IMS {
 
 			Action.printActions();
 			Action action = Action.getAction(utils);
-			LOGGER.info("=".repeat(50));
 
 			if (action == Action.RETURN) {
 				changeDomain = true;
@@ -78,6 +84,8 @@ public class IMS {
 			}
 		} while (!changeDomain);
 	}
+	
+	// Class.forName("com.mysql.jdbc.Driver"); 
 
 	public void doAction(CrudController<?> crudController, Action action) {
 		switch (action) {

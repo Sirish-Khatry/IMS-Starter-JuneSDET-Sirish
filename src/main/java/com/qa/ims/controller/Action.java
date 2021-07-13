@@ -13,7 +13,7 @@ import com.qa.ims.utils.Utils;
 public enum Action {
 	CREATE("To save a new entity into the database"), READ("To read an entity from the database"),
 	UPDATE("To change an entity already in the database"), DELETE("To remove an entity from the database"),
-	RETURN("To return to domain selection");
+	RETURN("To return to domain selection"), ADD_ITEM_TO_ORDER("To add item in a existing order");
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
