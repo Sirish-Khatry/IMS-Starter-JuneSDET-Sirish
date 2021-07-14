@@ -46,6 +46,28 @@ public class OrderController implements CrudController<Order> {
 		}
 		return orders;
 	}
+	
+	public Long totalCost() {
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Please enter id of the order");
+		LOGGER.info("=".repeat(90));
+		Long order_id = utils.getLong();
+		Long order_total =  orderDAO.TotalCost(order_id);
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Total Cost of orderID:"+ order_id + " is £" + order_total);
+		LOGGER.info("=".repeat(90));
+		List<Order> orders = null;
+		try {
+		 orders = orderDAO.readList(order_id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (Order order : orders) {
+			LOGGER.info(order);
+		}
+		return null;
+	}
 
 	@Override
 	public List<Order> readList() {

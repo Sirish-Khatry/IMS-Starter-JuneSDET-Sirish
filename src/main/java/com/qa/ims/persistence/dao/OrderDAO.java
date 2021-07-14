@@ -29,6 +29,12 @@ public class OrderDAO implements Dao<Order> {
 
 		return new Order(id, customer_id, item_id, first_name, lastname, item_name);
 	}
+	
+	public Long modelFromResultSetTotal(ResultSet resultSet) throws SQLException {
+		Long id = resultSet.getLong("order_id");
+		Long total_cost = resultSet.getLong("total_cost");
+		return (total_cost);
+	}
 
 	public Order modelFromResultSetSpecific(ResultSet resultSet) throws SQLException {
 		Long id = resultSet.getLong("order_id");
@@ -36,6 +42,7 @@ public class OrderDAO implements Dao<Order> {
 
 		return new Order(id, customer_id);
 	}
+	
 
 	@Override
 	public List<Order> readAll() {
@@ -69,6 +76,25 @@ public class OrderDAO implements Dao<Order> {
 			LOGGER.error(e.getMessage());
 		}
 		return null;
+	}
+	
+	public Long TotalCost(Long id) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement("SELECT o.order_id AS ORDER_ID, SUM(i.value) AS Total_Cost"
+						+ " FROM orders o"
+						+ "	JOIN orders_items oi ON oi.order_id = o.order_id"
+						+ "	JOIN items i ON i.item_id = oi.item_id WHERE o.order_id = ?");) {
+			statement.setLong(1, id);
+			try (ResultSet resultSet = statement.executeQuery();) {
+				resultSet.next();
+				return modelFromResultSetTotal(resultSet);
+			}
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+		
 	}
 
 	@Override

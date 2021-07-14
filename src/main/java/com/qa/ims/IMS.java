@@ -112,6 +112,9 @@ public class IMS {
 				e.printStackTrace();
 			}
 			break;
+		case TOTAL_COST:
+			orders.totalCost();
+			break;
 		case UPDATE:
 			crudController.update();
 			break;

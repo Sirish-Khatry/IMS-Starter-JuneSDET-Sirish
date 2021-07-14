@@ -17,11 +17,6 @@ public class Order {
 		this.item_id = item_id;
 	}
 
-//	public Order(Long id, Long customer_id) {
-//		super();
-//		this.id = id;
-//		this.customer_id = customer_id;
-//	}
 	
 	public Order(Long id, Long item_id) {
 		super();
