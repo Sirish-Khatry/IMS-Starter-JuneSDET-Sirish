@@ -94,8 +94,6 @@ public class CustomerController implements CrudController<Customer> {
 		LOGGER.info("=".repeat(90));
 		Long id = utils.getLong();
 		LOGGER.info("=".repeat(90));
-		LOGGER.info("Customer Deleted");
-		LOGGER.info("=".repeat(90));
 		return customerDAO.delete(id);
 	}
 

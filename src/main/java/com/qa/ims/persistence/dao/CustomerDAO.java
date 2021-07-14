@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.qa.ims.exceptions.CustomerNotFoundException;
 import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.utils.DBUtils;
 
@@ -89,7 +90,11 @@ public class CustomerDAO implements Dao<Customer> {
 				PreparedStatement statement = connection.prepareStatement("SELECT * FROM customers WHERE customer_id = ?");) {
 			statement.setLong(1, id);
 			try (ResultSet resultSet = statement.executeQuery();) {
-				resultSet.next();
+//				if(!resultSet.next()) {
+//					throw new CustomerNotFoundException("Customer Not Found");
+//				} else {
+					resultSet.next();
+			//	}
 				return modelFromResultSet(resultSet);
 			}
 		} catch (Exception e) {
@@ -130,6 +135,8 @@ public class CustomerDAO implements Dao<Customer> {
 	 */
 	@Override
 	public int delete(long id) {
+		
+		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement("DELETE FROM customers WHERE customer_id = ?");) {
 			statement.setLong(1, id);

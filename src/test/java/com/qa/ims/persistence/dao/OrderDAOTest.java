@@ -1,19 +1,18 @@
 package com.qa.ims.persistence.dao;
 
 import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
-public class CustomerDAOTest {
+public class OrderDAOTest {
 
-	private final CustomerDAO DAO = new CustomerDAO();
+
+	private final OrderDAO DAO = new OrderDAO();
 
 	@Before
 	public void setup() {
@@ -23,7 +22,7 @@ public class CustomerDAOTest {
 
 	@Test
 	public void testCreate() {
-		final Customer created = new Customer(3L, "chris", "perrins");
+		final Order created = new Order(3L, 1L);
 		assertEquals(created, DAO.create(created));
 	}
 
