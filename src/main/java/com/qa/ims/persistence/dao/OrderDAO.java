@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.controller.OrderController;
+import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
@@ -62,7 +63,7 @@ public class OrderDAO implements Dao<Order> {
 		return new ArrayList<>();
 	}
 
-	public Order readLatest() {
+	public Order readLatestDetail() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
@@ -71,6 +72,19 @@ public class OrderDAO implements Dao<Order> {
 						+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY oi.orders_items_id DESC LIMIT 1");) {
 			resultSet.next();
 			return modelFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Order readLatest() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders ORDER BY order_id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSetSpecific(resultSet);
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -104,7 +118,7 @@ public class OrderDAO implements Dao<Order> {
 						.prepareStatement("INSERT INTO orders(customer_id) VALUES (?)");) {
 			statement.setLong(1, order.getCustomer_id());
 			statement.executeUpdate();
-			//return readLatest();
+			return readLatest();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -120,7 +134,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(2, order.getItem_id());
 			statement.executeUpdate();
 			LOGGER.info("Item Added To The Order");
-			return readLatest();
+			return readLatestDetail();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.info("Item Failed to be Added to the Order");
