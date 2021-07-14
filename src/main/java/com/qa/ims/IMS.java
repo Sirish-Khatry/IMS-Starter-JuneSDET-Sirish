@@ -115,6 +115,9 @@ public class IMS {
 		case TOTAL_COST:
 			orders.totalCost();
 			break;
+		case REMOVE_ITEM:
+			orders.removeItem();
+			break;
 		case UPDATE:
 			crudController.update();
 			break;

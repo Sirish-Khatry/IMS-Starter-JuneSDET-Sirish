@@ -128,12 +128,18 @@ public class OrderController implements CrudController<Order> {
 	 */
 	@Override
 	public Order update() {
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter the id of the order you would like to update");
+		LOGGER.info("=".repeat(90));
 		Long order_id = utils.getLong();
+		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter a id of the item in the order that you would like to update");
+		LOGGER.info("=".repeat(90));
 		Long item_id = utils.getLong();
+		LOGGER.info("=".repeat(90));
 		Order order = orderDAO.update(new Order(order_id, item_id));
 		LOGGER.info("Order Updated");
+		LOGGER.info("=".repeat(90));
 		return order;
 	}
 
@@ -146,6 +152,7 @@ public class OrderController implements CrudController<Order> {
 	public int delete() {
 		LOGGER.info("Please enter the id of the order you would like to delete");
 		Long id = utils.getLong();
+		LOGGER.info("Order Removed");
 		return orderDAO.delete(id);
 	}
 
@@ -153,6 +160,23 @@ public class OrderController implements CrudController<Order> {
 	public Order read() {
 		readList();
 		return null;
+	}
+
+	public int removeItem() {
+		LOGGER.info("=".repeat(90));
+		LOGGER.info("Please enter the id of the order you want to remove item from");
+		Long order_id = utils.getLong();
+		LOGGER.info("Please enter the id of the item you want to remove");
+		Long item_id = utils.getLong();
+		LOGGER.info("=".repeat(90));
+		orderDAO.deleteItem(order_id, item_id);
+		LOGGER.info("Item Removed");
+		readAllOrderDetail();
+		LOGGER.info("=".repeat(90));
+		
+		return 0;
+				
+		
 	}
 
 }
