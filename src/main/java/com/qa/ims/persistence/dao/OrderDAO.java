@@ -32,7 +32,6 @@ public class OrderDAO implements Dao<Order> {
 	}
 	
 	public Long modelFromResultSetTotal(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("order_id");
 		Long total_cost = resultSet.getLong("total_cost");
 		return (total_cost);
 	}
@@ -85,6 +84,18 @@ public class OrderDAO implements Dao<Order> {
 				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders ORDER BY order_id DESC LIMIT 1");) {
 			resultSet.next();
 			return modelFromResultSetSpecific(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	public Order readLatestOrderItems() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT order_id, item_id FROM orders_items ORDER BY order_id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSet(resultSet);
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());

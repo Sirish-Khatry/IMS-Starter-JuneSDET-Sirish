@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `customer_id` INT NOT NULL,
     PRIMARY KEY (`order_id`),
 	FOREIGN KEY(`customer_id`) REFERENCES `customers`(`customer_id`)
+	ON DELETE CASCADE
+  	ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS `orders_items` (
@@ -30,8 +32,12 @@ CREATE TABLE IF NOT EXISTS `orders_items` (
     `order_id` INT NOT NULL,
     `item_id` INT NOT NULL,
     PRIMARY KEY (`orders_items_id`),
-	FOREIGN KEY(`order_id`) REFERENCES `orders`(`order_id`),
+	FOREIGN KEY(`order_id`) REFERENCES `orders`(`order_id`)
+	ON DELETE CASCADE
+  	ON UPDATE CASCADE,
 	FOREIGN KEY(`item_id`) REFERENCES `items`(`item_id`)
+	ON DELETE CASCADE
+  	ON UPDATE CASCADE
 );
 
 
