@@ -41,7 +41,7 @@ public class OrderDAOTestFail {
 //	
 	@Test
 	public void testReadAll() {
-		assertNull(DAO.readAllOrderDetails());
+		assertNull(DAO.readAll());
 	}
 
 	@Test

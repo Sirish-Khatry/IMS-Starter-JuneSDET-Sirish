@@ -68,11 +68,11 @@ public class OrderControllerTest {
 		orders.add(new Order(2L, 2L, 2L, "chris", "watkins", "Dell Laptop"));
 		orders.add(new Order(2L, 2L, 3L, "chris", "watkins", "Iphone12 ProMax"));
 
-		Mockito.when(dao.readAllOrderDetails()).thenReturn(orders);
+		Mockito.when(dao.readAll()).thenReturn(orders);
 
-		assertEquals(orders, controller.readAllOrderDetail());
+		assertEquals(orders, controller.readAll());
 
-		Mockito.verify(dao, Mockito.times(1)).readAllOrderDetails();
+		Mockito.verify(dao, Mockito.times(1)).readAll();
 	}
 	
 	@Test

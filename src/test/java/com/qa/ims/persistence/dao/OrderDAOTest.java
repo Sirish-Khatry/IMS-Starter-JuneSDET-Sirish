@@ -47,7 +47,7 @@ public class OrderDAOTest {
 		expected.add(new Order(1L, 1L, 1L, "jordan", "harrison", "HP Pavilion" ));
 		expected.add(new Order(2L, 2L, 2L, "chris", "watkins", "Dell Laptop" ));
 		expected.add(new Order(2L, 2L, 3L, "chris", "watkins", "Iphone12 ProMax"));
-		assertEquals(expected, DAO.readAllOrderDetails());
+		assertEquals(expected, DAO.readAll());
 	}
 	
 	@Test
@@ -56,14 +56,6 @@ public class OrderDAOTest {
 		assertEquals(expected, DAO.readLatestOrderItems());
 	}
 	
-	
-	@Test
-	public void testReadAllOrders() {
-		List<Order> expected = new ArrayList<>();
-		expected.add(new Order(1L, 1L));
-		expected.add(new Order(2L, 2L));
-		assertEquals(expected, DAO.readAll());
-	}
 
 	@Test
 	public void testReadLatest() {

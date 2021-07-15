@@ -55,11 +55,15 @@ public class OrderDAO implements Dao<Order> {
 	public List<Order> readAll() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(
+						"SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
+								+ " INNER JOIN orders o ON c.customer_id = o.customer_id"
+								+ " INNER JOIN orders_items oi ON o.order_id = oi.order_id"
+								+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY o.order_id");) {
 
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders");) {
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
-				orders.add(modelFromResultSetSpecific(resultSet));
+				orders.add(modelFromResultSet(resultSet));
 			}
 			return orders;
 		} catch (SQLException e) {
@@ -161,18 +165,14 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	public List<Order> readAllOrderDetails() {
+	public List<Order> readEmptyOrder() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(
-						"SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
-								+ " INNER JOIN orders o ON c.customer_id = o.customer_id"
-								+ " INNER JOIN orders_items oi ON o.order_id = oi.order_id"
-								+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY o.order_id");) {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders");) {
 
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
-				orders.add(modelFromResultSet(resultSet));
+				orders.add(modelFromResultSetSpecific(resultSet));
 			}
 			return orders;
 		} catch (SQLException e) {
