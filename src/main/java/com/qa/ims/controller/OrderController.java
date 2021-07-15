@@ -1,13 +1,11 @@
 package com.qa.ims.controller;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.domain.Order;
-import com.qa.ims.persistence.domain.ItemChoice;
 import com.qa.ims.utils.Utils;
 
 /**
@@ -39,13 +37,13 @@ public class OrderController implements CrudController<Order> {
 		return orders;
 	}
 	
-	public List<Order> readAllOrderDetail() {
-		List<Order> orders = orderDAO.readAllOrderDetails();
-		for (Order order : orders) {
-			LOGGER.info(order);
-		}
-		return orders;
-	}
+//	public List<Order> readAllOrderDetail() {
+//		List<Order> orders = orderDAO.readAllOrderDetails();
+//		for (Order order : orders) {
+//			LOGGER.info(order);
+//		}
+//		return orders;
+//	}
 	
 	public Long totalCost() {
 		LOGGER.info("=".repeat(90));
@@ -66,12 +64,11 @@ public class OrderController implements CrudController<Order> {
 		for (Order order : orders) {
 			LOGGER.info(order);
 		}
-		return null;
+		return order_total;
 	}
 
 	@Override
 	public List<Order> readList() {
-		readAll();
 		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter id of the order you would like to read");
 		Long order_id = utils.getLong();
@@ -104,7 +101,7 @@ public class OrderController implements CrudController<Order> {
 
 	public Order createOrderItem() throws SQLException {
 		LOGGER.info("=".repeat(90));
-		readAllOrderDetail();
+		readAll();
 		LOGGER.info("=".repeat(90));
 		LOGGER.info("Please enter id of the order you would like to add item to");
 		LOGGER.info("=".repeat(90));
@@ -117,7 +114,7 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("=".repeat(90));
 		LOGGER.info("=".repeat(90));
 		LOGGER.info("Item added");
-		readAllOrderDetail();
+		//readAllOrderDetail();
 		LOGGER.info("=".repeat(90));
 		return order;
 
@@ -169,13 +166,10 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Please enter the id of the item you want to remove");
 		Long item_id = utils.getLong();
 		LOGGER.info("=".repeat(90));
-		orderDAO.deleteItem(order_id, item_id);
 		LOGGER.info("Item Removed");
-		readAllOrderDetail();
+		readAll();
 		LOGGER.info("=".repeat(90));
-		
-		return 0;
-				
+		return orderDAO.deleteItem(order_id, item_id);		
 		
 	}
 

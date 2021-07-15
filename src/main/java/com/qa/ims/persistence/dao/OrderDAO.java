@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.controller.OrderController;
+import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.DBUtils;
 
@@ -31,7 +32,6 @@ public class OrderDAO implements Dao<Order> {
 	}
 	
 	public Long modelFromResultSetTotal(ResultSet resultSet) throws SQLException {
-		Long id = resultSet.getLong("order_id");
 		Long total_cost = resultSet.getLong("total_cost");
 		return (total_cost);
 	}
@@ -43,26 +43,37 @@ public class OrderDAO implements Dao<Order> {
 		return new Order(id, customer_id);
 	}
 	
+	public Order modelFromResultSetOrderItems(ResultSet resultSet) throws SQLException {
+		Long id = resultSet.getLong("order_id");
+		Long item_id = resultSet.getLong("item_id");
+
+		return new Order(id, item_id);
+	}
+	
 
 	@Override
 	public List<Order> readAll() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(
+						"SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
+								+ " INNER JOIN orders o ON c.customer_id = o.customer_id"
+								+ " INNER JOIN orders_items oi ON o.order_id = oi.order_id"
+								+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY o.order_id");) {
 
-				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders");) {
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
-				orders.add(modelFromResultSetSpecific(resultSet));
+				orders.add(modelFromResultSet(resultSet));
 			}
 			return orders;
 		} catch (SQLException e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return new ArrayList<>();
+		return null;
 	}
 
-	public Order readLatest() {
+	public Order readLatestDetail() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet resultSet = statement.executeQuery("SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
@@ -71,6 +82,31 @@ public class OrderDAO implements Dao<Order> {
 						+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY oi.orders_items_id DESC LIMIT 1");) {
 			resultSet.next();
 			return modelFromResultSet(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Order readLatest() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders ORDER BY order_id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSetSpecific(resultSet);
+		} catch (Exception e) {
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		}
+		return null;
+	}
+	public Order readLatestOrderItems() {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT order_id, item_id FROM orders_items ORDER BY order_id DESC LIMIT 1");) {
+			resultSet.next();
+			return modelFromResultSetOrderItems(resultSet);
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -104,7 +140,7 @@ public class OrderDAO implements Dao<Order> {
 						.prepareStatement("INSERT INTO orders(customer_id) VALUES (?)");) {
 			statement.setLong(1, order.getCustomer_id());
 			statement.executeUpdate();
-			//return readLatest();
+			return readLatest();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
@@ -120,7 +156,7 @@ public class OrderDAO implements Dao<Order> {
 			statement.setLong(2, order.getItem_id());
 			statement.executeUpdate();
 			LOGGER.info("Item Added To The Order");
-			return readLatest();
+			return readLatestDetail();
 		} catch (Exception e) {
 			LOGGER.debug(e);
 			LOGGER.info("Item Failed to be Added to the Order");
@@ -129,25 +165,21 @@ public class OrderDAO implements Dao<Order> {
 		return null;
 	}
 
-	public List<Order> readAllOrderDetails() {
+	public List<Order> readEmptyOrder() {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(
-						"SELECT c.customer_id, c.first_name, c.surname, o.order_id, i.item_id,i.name from customers c"
-								+ " INNER JOIN orders o ON c.customer_id = o.customer_id"
-								+ " INNER JOIN orders_items oi ON o.order_id = oi.order_id"
-								+ " INNER JOIN items i ON oi.item_id = i.item_id ORDER BY o.order_id");) {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders");) {
 
 			List<Order> orders = new ArrayList<>();
 			while (resultSet.next()) {
-				orders.add(modelFromResultSet(resultSet));
+				orders.add(modelFromResultSetSpecific(resultSet));
 			}
 			return orders;
 		} catch (SQLException e) {
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 		}
-		return new ArrayList<>();
+		return null;
 	}
 
 	public List<Order> readList(Long id) throws SQLException {
@@ -178,9 +210,9 @@ public class OrderDAO implements Dao<Order> {
 	public Order update(Order order) {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				PreparedStatement statement = connection
-						.prepareStatement("UPDATE order_items SET item_id = ? WHERE order_id = ?");) {
-			statement.setLong(1, order.getId());
-			statement.setLong(2, order.getItem_id());
+						.prepareStatement("UPDATE orders_items SET item_id = ? WHERE order_id = ?");) {
+			statement.setLong(1, order.getItem_id());
+			statement.setLong(2, order.getId());
 			statement.executeUpdate();
 			return read(order.getId());
 		} catch (Exception e) {
@@ -219,7 +251,22 @@ public class OrderDAO implements Dao<Order> {
 	@Override
 	public Order read(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return readLatest();
 	}
 
+//	@Override
+//	public Order read(Long id) {
+//		try (Connection connection = DBUtils.getInstance().getConnection();
+//				PreparedStatement statement = connection.prepareStatement("SELECT order_id, item_id FROM orders_items WHERE order_id = ?");) {
+//			statement.setLong(1, id);
+//			try (ResultSet resultSet = statement.executeQuery();) {
+//				resultSet.next();
+//				return modelFromResultSet(resultSet);
+//			}
+//		} catch (Exception e) {
+//			LOGGER.debug(e);
+//			LOGGER.error(e.getMessage());
+//		}
+//		return null;
+//	}
 }

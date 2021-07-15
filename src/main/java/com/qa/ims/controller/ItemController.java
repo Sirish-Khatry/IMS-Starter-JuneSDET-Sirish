@@ -102,7 +102,7 @@ public class ItemController implements CrudController<Item> {
 
 	@Override
 	public Item read() {
-		// TODO Auto-generated method stub
+		readAll();
 		return null;
 	}
 
