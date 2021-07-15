@@ -29,12 +29,40 @@ public class OrderDAOTest {
 	}
 
 	@Test
+	public void testCreateOrder() {
+		final Order created = new Order(1L);
+		final Order expected = new Order (3L, 1L);
+		assertEquals(expected, DAO.create(created));
+	}
+	
+	@Test
+	public void totalCost() {
+		Long expected = 1400L;
+		assertEquals(expected, DAO.TotalCost(2L));
+	}
+	
+	@Test
 	public void testReadAll() {
 		List<Order> expected = new ArrayList<>();
 		expected.add(new Order(1L, 1L, 1L, "jordan", "harrison", "HP Pavilion" ));
 		expected.add(new Order(2L, 2L, 2L, "chris", "watkins", "Dell Laptop" ));
 		expected.add(new Order(2L, 2L, 3L, "chris", "watkins", "Iphone12 ProMax"));
 		assertEquals(expected, DAO.readAllOrderDetails());
+	}
+	
+	@Test
+	public void testReadLatestOrderItem() {
+		final Order expected = new Order(2L, 3L);
+		assertEquals(expected, DAO.readLatestOrderItems());
+	}
+	
+	
+	@Test
+	public void testReadAllOrders() {
+		List<Order> expected = new ArrayList<>();
+		expected.add(new Order(1L, 1L));
+		expected.add(new Order(2L, 2L));
+		assertEquals(expected, DAO.readAll());
 	}
 
 	@Test
@@ -55,13 +83,19 @@ public class OrderDAOTest {
 			e.printStackTrace();
 		}
 	}
-//
+
 //	@Test
 //	public void testUpdate() {
-//		final Customer updated = new Customer(1L, "chris", "perrins");
-//		assertEquals(updated, DAO.update(updated));
-//	}
 //
+//		Order expected = new Order(2L, 1L);
+//		assertEquals(expected, DAO.update(expected));
+//	}
+
+	@Test
+	public void testDeleteOrder() {
+		assertEquals(1, DAO.delete(1));
+	}
+	
 	@Test
 	public void testDelete() {
 		assertEquals(1, DAO.deleteItem(2,3));

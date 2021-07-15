@@ -64,7 +64,7 @@ public class OrderController implements CrudController<Order> {
 		for (Order order : orders) {
 			LOGGER.info(order);
 		}
-		return null;
+		return order_total;
 	}
 
 	@Override
