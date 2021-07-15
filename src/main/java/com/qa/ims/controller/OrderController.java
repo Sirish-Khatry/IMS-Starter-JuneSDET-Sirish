@@ -167,13 +167,10 @@ public class OrderController implements CrudController<Order> {
 		LOGGER.info("Please enter the id of the item you want to remove");
 		Long item_id = utils.getLong();
 		LOGGER.info("=".repeat(90));
-		orderDAO.deleteItem(order_id, item_id);
 		LOGGER.info("Item Removed");
 		readAllOrderDetail();
 		LOGGER.info("=".repeat(90));
-		
-		return 0;
-				
+		return orderDAO.deleteItem(order_id, item_id);		
 		
 	}
 
