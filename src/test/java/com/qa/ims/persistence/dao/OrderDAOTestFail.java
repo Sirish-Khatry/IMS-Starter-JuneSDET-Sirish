@@ -32,13 +32,6 @@ public class OrderDAOTestFail {
 		assertNull(DAO.create(created));
 	}
 
-//	
-//	@Test
-//	public void totalCost() {
-//		Long expected = 1400L;
-//		assertEquals(expected, DAO.TotalCost(2L));
-//	}
-//	
 	@Test
 	public void testReadAll() {
 		assertNull(DAO.readAll());
