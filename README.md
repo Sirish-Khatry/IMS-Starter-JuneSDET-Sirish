@@ -1,68 +1,38 @@
-Coverage: 34%
+Coverage: 74%
 # Project Title
 
-One Paragraph of project description goes here
+IMS(Inventory Management System) IMS is used to keep track of customers, items and orders. IMS allows add/delete/update/view of customers, orders and items.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+To get the IMS working clone the repository and open a command line on the main folder. Then write java -jar "ims-0.0.1-jar-with-dependencies.jar" to run the jar file.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+No software installtion required.
 
-```
-Give examples
-```
 
-### Installing
+### How to use the IMS system
 
-A step by step series of examples that tell you how to get a development env running
+-When the jar file is run, you will be greeted into the system.
+-There will be 4 entities provided to chose from, just type the entities title to use that entity.
+-After chosing an entity, there will be different options available to chose from regarding what action you want to perfrom within that entity.E.g. CREATE, READ, DELETE
+- After chosing a action, you will be asked to enter the required input for that entity and action to function, for example CUSTOMER->CREATE->Enter First_Name->Enter Lastname.
+- If you need to chose a different entity enter RETURN to return to entity selection.
+- To stop the application enter STOP.
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
+The tests can be run by opening the source file in Eclipse IDE and selecting run as JUNIT test.
 
 ### Unit Tests 
 
-Explain what these tests test, why and how to run them
-
+Unit test for Controllers test the methods in the controller class and their return values.
+Unit test for Domains test the attributes of the domain and how they are set and accessed.
+Unit test for DAO test the queries and their return, making sure each query is ran sucessfully.
+Unit test for exception assure that if any method or query fails they are caught and the user is made aware of that exception.
 ```
-Give an example
-```
-
-### Integration Tests 
-Explain what these tests test, why and how to run them
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
@@ -70,7 +40,11 @@ Add additional notes about how to deploy this on a live system
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning.
+We use GIT for versioning.
+
+## Testing
+
+Unit testing: JUNIT
 
 ## Authors
 
